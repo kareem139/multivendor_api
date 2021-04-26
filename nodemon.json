@@ -1,0 +1,6 @@
+{
+    "env":{
+        "JWT_TOKEN":"LOLO",
+        "SEND_GRID":"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"
+    }
+}
