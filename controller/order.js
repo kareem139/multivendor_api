@@ -5,7 +5,7 @@ const Order = require("../models/order");
 const Shop = require("../models/shop");
 const Cartitem = require("../models/carditem");
 
-Order.hasMany(Cartitem, { as: "cartitems", foreignKey: "cartitemId" });
+Order.hasMany(Cartitem, { as: "cartitems", foreignKey: "orderId" });
 
 exports._add_order = async (req, res, next) => {
   connection.sync();
@@ -14,7 +14,6 @@ exports._add_order = async (req, res, next) => {
     .then((shop) => {
       Cartitem.findOne({ where: { cartitemId: req.body.cartitemId } })
         .then(async (data) => {
-          console.log(data.productName);
           await Order.create({
             userId: req.body.userId,
             cartitemId: req.body.cartitemId,
@@ -28,6 +27,9 @@ exports._add_order = async (req, res, next) => {
             productName: data.productName,
           })
             .then((o) => {
+              data.orderId = o.orderId;
+              data.save();
+              console.log(o);
               res.status(200).json({
                 o,
                 message: "add success",

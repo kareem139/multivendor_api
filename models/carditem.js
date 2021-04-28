@@ -32,6 +32,9 @@ CartItem.init(
     shopName: {
       type: DataTypes.STRING,
     },
+    orderId: {
+      type: DataTypes.INTEGER,
+    },
   },
   { sequelize: connection, modelName: "cartitem" }
 );

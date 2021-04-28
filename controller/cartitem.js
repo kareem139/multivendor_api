@@ -4,7 +4,7 @@ const Cartitem = require("../models/carditem");
 const Order = require("../models/order");
 const Shop = require("../models/shop");
 
-Cartitem.belongsTo(Order, { as: "cartitems", foreignKey: "cartitemId" });
+Cartitem.belongsTo(Order, { as: "order", foreignKey: "orderId" });
 exports._add_item = async (req, res) => {
   connection.sync();
   console.log(req.body);
@@ -12,7 +12,7 @@ exports._add_item = async (req, res) => {
     .then(async (data) => {
       await Cartitem.findOne({ where: { productId: data.productId } })
         .then((item) => {
-          if (item) {
+          if (req.body.userId == item.userId) {
             item.quantity = item.quantity + req.body.quantity;
             item.save();
           } else {
@@ -26,6 +26,7 @@ exports._add_item = async (req, res) => {
                   unitprice: data.price,
                   shopId: shop.shopId,
                   shopName: shop.shopName,
+                  orderId: 0,
                 })
                   .then((item) => {
                     res.status(200).json({
